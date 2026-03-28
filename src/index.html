@@ -18,6 +18,24 @@
     --line-light: 1px solid #ddd;
   }
 
+  [data-theme="dark"] {
+    --ink: #fff;
+    --bg: #111;
+    --mid: #888;
+    --line: 1px solid #fff;
+    --line-light: 1px solid #333;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #fff;
+      --bg: #111;
+      --mid: #888;
+      --line: 1px solid #fff;
+      --line-light: 1px solid #333;
+    }
+  }
+
   body {
     font-family: 'Inter', -apple-system, sans-serif;
     font-weight: 300;
@@ -46,6 +64,24 @@
     text-transform: uppercase;
     padding: 24px 28px;
     border-bottom: var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .theme-toggle {
+    font-size: 1rem;
+    background: none;
+    border: none;
+    color: var(--mid);
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.15s;
+  }
+
+  .theme-toggle:hover {
+    color: var(--ink);
   }
 
   .section {
@@ -417,7 +453,7 @@
 <body>
 
 <div class="sidebar">
-  <div class="logo">pointilism</div>
+  <div class="logo"><span>pointilism</span><button class="theme-toggle" id="theme-toggle" title="toggle theme">&#9789;</button></div>
 
   <div class="section">
     <div class="section-title">Preset</div>

@@ -13,6 +13,29 @@ const uploadError = document.getElementById('upload-error');
 const btnUpload = document.getElementById('btn-upload');
 const particleCountEl = document.getElementById('particle-count');
 const focalPointEl = document.getElementById('focal-point');
+const themeToggle = document.getElementById('theme-toggle');
+
+// --- Theme ---
+
+function getTheme() {
+  const stored = localStorage.getItem('pointilism-theme');
+  if (stored) return stored;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  themeToggle.textContent = theme === 'dark' ? '\u2600' : '\u263D';
+}
+
+applyTheme(getTheme());
+
+themeToggle.addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme') || getTheme();
+  const next = current === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('pointilism-theme', next);
+  applyTheme(next);
+});
 
 let currentImage = null;
 let dots = [];
