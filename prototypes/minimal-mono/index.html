@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pointilism — Minimal Mono</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --ink: #000;
+    --bg: #fff;
+    --mid: #888;
+    --line: 1px solid #000;
+    --line-light: 1px solid #ddd;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+    font-weight: 300;
+  }
+
+  .sidebar {
+    width: 300px;
+    min-width: 300px;
+    border-right: var(--line);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .logo {
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 24px 28px;
+    border-bottom: var(--line);
+  }
+
+  .section {
+    border-bottom: var(--line);
+    padding: 20px 28px;
+  }
+
+  .section-title {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--mid);
+    margin-bottom: 16px;
+  }
+
+  .control {
+    margin-bottom: 16px;
+  }
+
+  .control:last-child {
+    margin-bottom: 0;
+  }
+
+  .control-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+  }
+
+  .control label {
+    font-size: 0.8rem;
+    font-weight: 400;
+  }
+
+  .control .value {
+    font-size: 0.7rem;
+    color: var(--mid);
+    font-variant-numeric: tabular-nums;
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 1px;
+    background: var(--ink);
+    outline: none;
+    cursor: pointer;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 10px;
+    height: 10px;
+    background: var(--bg);
+    border: var(--line);
+    border-radius: 50%;
+    cursor: grab;
+  }
+
+  .color-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .color-swatch {
+    width: 24px;
+    height: 24px;
+    border: var(--line);
+    cursor: pointer;
+  }
+
+  .color-swatch.active {
+    outline: 1px solid var(--ink);
+    outline-offset: 3px;
+  }
+
+  .preset-row {
+    display: flex;
+    gap: 0;
+  }
+
+  .preset-btn {
+    flex: 1;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 400;
+    padding: 8px 0;
+    border: var(--line);
+    border-right: none;
+    background: var(--bg);
+    cursor: pointer;
+    text-transform: lowercase;
+    transition: background 0.15s;
+  }
+
+  .preset-btn:last-child {
+    border-right: var(--line);
+  }
+
+  .preset-btn:hover {
+    background: #f5f5f5;
+  }
+
+  .preset-btn.active {
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  /* Toggle */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .toggle-row:last-child { margin-bottom: 0; }
+
+  .toggle {
+    width: 32px;
+    height: 16px;
+    border: var(--line);
+    position: relative;
+    cursor: pointer;
+    border-radius: 8px;
+  }
+
+  .toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 10px;
+    height: 10px;
+    background: var(--mid);
+    border-radius: 50%;
+    transition: all 0.15s;
+  }
+
+  .toggle.on::after {
+    left: 18px;
+    background: var(--ink);
+  }
+
+  /* Shape */
+  .shape-row {
+    display: flex;
+    gap: 0;
+  }
+
+  .shape-btn {
+    width: 36px;
+    height: 36px;
+    border: var(--line);
+    border-right: none;
+    background: var(--bg);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    color: var(--mid);
+    transition: all 0.15s;
+  }
+
+  .shape-btn:last-child { border-right: var(--line); }
+  .shape-btn:hover { color: var(--ink); }
+  .shape-btn.active { background: var(--ink); color: var(--bg); }
+
+  /* Buttons */
+  .sidebar-footer {
+    padding: 20px 28px;
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 400;
+    padding: 12px;
+    border: var(--line);
+    background: var(--bg);
+    cursor: pointer;
+    text-transform: lowercase;
+    letter-spacing: 0.1em;
+    transition: all 0.15s;
+    text-align: center;
+  }
+
+  .btn:hover {
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  .btn-primary:hover {
+    background: var(--bg);
+    color: var(--ink);
+  }
+
+  /* Canvas */
+  .canvas-area {
+    flex: 1;
+    position: relative;
+    background: #000;
+    overflow: hidden;
+  }
+
+  canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .upload-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .upload-hint {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: lowercase;
+    color: #555;
+    border: 1px solid #333;
+    padding: 14px 28px;
+  }
+
+  /* Particle count */
+  .particle-count {
+    font-size: 0.65rem;
+    color: var(--mid);
+    text-align: center;
+    padding-top: 8px;
+    font-variant-numeric: tabular-nums;
+  }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="logo">pointilism</div>
+
+  <div class="section">
+    <div class="section-title">Preset</div>
+    <div class="preset-row">
+      <button class="preset-btn active">subtle</button>
+      <button class="preset-btn">dense</button>
+      <button class="preset-btn">dreamy</button>
+      <button class="preset-btn">energy</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Dots</div>
+    <div class="control">
+      <div class="control-header">
+        <label>Density</label><span class="value">3</span>
+      </div>
+      <input type="range" min="1" max="10" value="3">
+    </div>
+    <div class="control">
+      <div class="control-header">
+        <label>Size</label><span class="value">1.2</span>
+      </div>
+      <input type="range" min="1" max="20" value="4">
+    </div>
+    <div class="control">
+      <div class="control-header">
+        <label>Scaling</label><span class="value">65%</span>
+      </div>
+      <input type="range" min="0" max="100" value="65">
+    </div>
+    <div class="control">
+      <div class="control-header">
+        <label>Threshold</label><span class="value">4%</span>
+      </div>
+      <input type="range" min="0" max="100" value="4">
+    </div>
+    <div class="control">
+      <label style="margin-bottom:8px;display:block">Shape</label>
+      <div class="shape-row">
+        <button class="shape-btn active" title="Circle">&#9679;</button>
+        <button class="shape-btn" title="Square">&#9632;</button>
+        <button class="shape-btn" title="Soft">&#10687;</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Color</div>
+    <div class="control">
+      <label style="margin-bottom:8px;display:block">Background</label>
+      <div class="color-row">
+        <div class="color-swatch active" style="background:#000"></div>
+        <div class="color-swatch" style="background:#111"></div>
+        <div class="color-swatch" style="background:#0a0a2e"></div>
+        <div class="color-swatch" style="background:#eee"></div>
+        <div class="color-swatch" style="background:#fff"></div>
+      </div>
+    </div>
+    <div class="control">
+      <div class="control-header">
+        <label>Tint</label><span class="value">off</span>
+      </div>
+      <input type="range" min="0" max="100" value="0">
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Interaction</div>
+    <div class="control">
+      <div class="control-header">
+        <label>Radius</label><span class="value">80px</span>
+      </div>
+      <input type="range" min="10" max="200" value="80">
+    </div>
+    <div class="control">
+      <div class="control-header">
+        <label>Strength</label><span class="value">50%</span>
+      </div>
+      <input type="range" min="0" max="100" value="50">
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Motion</div>
+    <div class="toggle-row">
+      <label style="font-size:0.8rem">Breathing</label>
+      <div class="toggle on"></div>
+    </div>
+    <div class="toggle-row">
+      <label style="font-size:0.8rem">Sway</label>
+      <div class="toggle"></div>
+    </div>
+    <div class="toggle-row">
+      <label style="font-size:0.8rem">Rise</label>
+      <div class="toggle"></div>
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <button class="btn btn-primary">upload image</button>
+    <button class="btn">export .html</button>
+    <div class="particle-count">12,847 particles</div>
+  </div>
+</div>
+
+<div class="canvas-area">
+  <canvas id="scene"></canvas>
+  <div class="upload-overlay">
+    <div class="upload-hint">drop image or click upload</div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('scene');
+const ctx = canvas.getContext('2d');
+let dots = [];
+let mouse = { x: -1000, y: -1000 };
+
+function resize() {
+  const r = canvas.getBoundingClientRect();
+  canvas.width = r.width;
+  canvas.height = r.height;
+  generateDots();
+}
+
+function generateDots() {
+  dots = [];
+  const stride = 7;
+  for (let y = 0; y < canvas.height; y += stride) {
+    for (let x = 0; x < canvas.width; x += stride) {
+      const cx = canvas.width / 2, cy = canvas.height / 2;
+      const dx = x - cx, dy = y - cy;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const maxDist = Math.min(cx, cy) * 0.8;
+      const br = Math.max(0, 1 - dist / maxDist);
+      if (br < 0.03 || Math.random() > br * 1.5 + 0.05) continue;
+      dots.push({
+        ox: x, oy: y, x, y, br,
+        size: 0.4 + br * 1.6,
+        alpha: 0.4 + br * 0.6,
+        phase: Math.random() * Math.PI * 2
+      });
+    }
+  }
+}
+
+canvas.addEventListener('mousemove', e => {
+  const r = canvas.getBoundingClientRect();
+  mouse.x = e.clientX - r.left;
+  mouse.y = e.clientY - r.top;
+});
+canvas.addEventListener('mouseleave', () => { mouse.x = -1000; mouse.y = -1000; });
+
+function animate(t) {
+  requestAnimationFrame(animate);
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  const radius = 80;
+  for (const d of dots) {
+    const dx = d.ox - mouse.x, dy = d.oy - mouse.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < radius && dist > 0) {
+      const force = (1 - dist / radius) * 18;
+      d.x += (d.ox + dx / dist * force - d.x) * 0.12;
+      d.y += (d.oy + dy / dist * force - d.y) * 0.12;
+    } else {
+      d.x += (d.ox - d.x) * 0.06;
+      d.y += (d.oy - d.y) * 0.06;
+    }
+    const breathe = 0.92 + 0.08 * Math.sin(t * 0.0015 + d.phase);
+    ctx.globalAlpha = d.alpha * breathe;
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(d.x, d.y, d.size, 0, 6.2832);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+
+window.addEventListener('resize', resize);
+resize();
+requestAnimationFrame(animate);
+</script>
+</body>
+</html>

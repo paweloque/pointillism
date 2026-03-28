@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pointilism — Editorial</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@300;400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #F5F2ED;
+    --surface: #FFFDF9;
+    --ink: #1C1917;
+    --ink-mid: #78716C;
+    --ink-light: #A8A29E;
+    --border: #E7E5E4;
+    --accent: #B45309;
+    --accent-light: #FEF3C7;
+  }
+
+  body {
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+    font-weight: 300;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 340px;
+    min-width: 340px;
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    border-right: 1px solid var(--border);
+  }
+
+  .sidebar::-webkit-scrollbar { width: 0; }
+
+  .header {
+    padding: 32px 32px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-family: 'Instrument Serif', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .tagline {
+    font-size: 0.75rem;
+    color: var(--ink-light);
+    letter-spacing: 0.05em;
+  }
+
+  .section {
+    border-bottom: 1px solid var(--border);
+    padding: 24px 32px;
+  }
+
+  .section-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1rem;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title .num {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.55rem;
+    font-weight: 500;
+    color: var(--accent);
+    background: var(--accent-light);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .control { margin-bottom: 18px; }
+  .control:last-child { margin-bottom: 0; }
+
+  .control-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+  }
+
+  .control label {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--ink-mid);
+  }
+
+  .control .value {
+    font-size: 0.75rem;
+    color: var(--ink-light);
+    font-variant-numeric: tabular-nums;
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 2px;
+    background: var(--border);
+    outline: none;
+    cursor: pointer;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    background: var(--surface);
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    cursor: grab;
+  }
+
+  /* Presets as tags */
+  .preset-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .preset-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 400;
+    padding: 6px 16px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    background: transparent;
+    color: var(--ink-mid);
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.03em;
+  }
+
+  .preset-btn:hover { border-color: var(--ink-mid); color: var(--ink); }
+
+  .preset-btn.active {
+    background: var(--ink);
+    color: var(--surface);
+    border-color: var(--ink);
+  }
+
+  /* Color */
+  .color-row { display: flex; gap: 10px; align-items: center; }
+
+  .color-swatch {
+    width: 26px;
+    height: 26px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+
+  .color-swatch:hover { transform: scale(1.15); }
+  .color-swatch.active { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* Toggle */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .toggle-row:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+
+  .toggle {
+    width: 34px;
+    height: 18px;
+    border-radius: 9px;
+    background: var(--border);
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #fff;
+    transition: all 0.2s;
+  }
+
+  .toggle.on { background: var(--accent); }
+  .toggle.on::after { left: 18px; }
+
+  /* Shape */
+  .shape-row { display: flex; gap: 0; }
+
+  .shape-btn {
+    width: 44px;
+    height: 36px;
+    border: 1px solid var(--border);
+    border-right: none;
+    background: transparent;
+    color: var(--ink-light);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    transition: all 0.15s;
+  }
+
+  .shape-btn:last-child { border-right: 1px solid var(--border); }
+  .shape-btn:hover { color: var(--ink); }
+
+  .shape-btn.active {
+    background: var(--ink);
+    color: var(--surface);
+    border-color: var(--ink);
+  }
+
+  /* Buttons */
+  .sidebar-footer {
+    padding: 24px 32px;
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 14px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+    letter-spacing: 0.03em;
+  }
+
+  .btn:hover { background: var(--bg); }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--surface);
+    border-color: var(--ink);
+  }
+
+  .btn-primary:hover { opacity: 0.9; }
+
+  .particle-count {
+    font-size: 0.65rem;
+    color: var(--ink-light);
+    text-align: center;
+    padding-top: 2px;
+  }
+
+  /* Canvas */
+  .canvas-area {
+    flex: 1;
+    position: relative;
+    background: #1C1917;
+    overflow: hidden;
+  }
+
+  canvas { width: 100%; height: 100%; display: block; }
+
+  .upload-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .upload-hint {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 18px 36px;
+    letter-spacing: 0.02em;
+  }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="header">
+    <div class="logo">Pointilism</div>
+    <div class="tagline">Image to dots background generator</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="num">1</span> Preset</div>
+    <div class="preset-row">
+      <button class="preset-btn active">Subtle</button>
+      <button class="preset-btn">Dense</button>
+      <button class="preset-btn">Dreamy</button>
+      <button class="preset-btn">Energetic</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="num">2</span> Dots</div>
+    <div class="control">
+      <div class="control-header"><label>Density</label><span class="value">3</span></div>
+      <input type="range" min="1" max="10" value="3">
+    </div>
+    <div class="control">
+      <div class="control-header"><label>Size</label><span class="value">1.2</span></div>
+      <input type="range" min="1" max="20" value="4">
+    </div>
+    <div class="control">
+      <div class="control-header"><label>Scaling</label><span class="value">65%</span></div>
+      <input type="range" min="0" max="100" value="65">
+    </div>
+    <div class="control">
+      <div class="control-header"><label>Threshold</label><span class="value">4%</span></div>
+      <input type="range" min="0" max="100" value="4">
+    </div>
+    <div class="control">
+      <label style="margin-bottom:10px;display:block;font-size:0.8rem;color:var(--ink-mid)">Shape</label>
+      <div class="shape-row">
+        <button class="shape-btn active">&#9679;</button>
+        <button class="shape-btn">&#9632;</button>
+        <button class="shape-btn">&#10687;</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="num">3</span> Color</div>
+    <div class="control">
+      <label style="margin-bottom:10px;display:block;font-size:0.8rem;color:var(--ink-mid)">Background</label>
+      <div class="color-row">
+        <div class="color-swatch active" style="background:#1C1917"></div>
+        <div class="color-swatch" style="background:#0f172a"></div>
+        <div class="color-swatch" style="background:#1a0a00"></div>
+        <div class="color-swatch" style="background:#F5F2ED"></div>
+        <div class="color-swatch" style="background:#fff"></div>
+      </div>
+    </div>
+    <div class="control">
+      <div class="control-header"><label>Tint</label><span class="value">off</span></div>
+      <input type="range" min="0" max="100" value="0">
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="num">4</span> Interaction</div>
+    <div class="control">
+      <div class="control-header"><label>Radius</label><span class="value">80px</span></div>
+      <input type="range" min="10" max="200" value="80">
+    </div>
+    <div class="control">
+      <div class="control-header"><label>Strength</label><span class="value">50%</span></div>
+      <input type="range" min="0" max="100" value="50">
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="num">5</span> Motion</div>
+    <div class="toggle-row"><label style="font-size:0.8rem;color:var(--ink-mid)">Breathing</label><div class="toggle on"></div></div>
+    <div class="toggle-row"><label style="font-size:0.8rem;color:var(--ink-mid)">Sway</label><div class="toggle"></div></div>
+    <div class="toggle-row"><label style="font-size:0.8rem;color:var(--ink-mid)">Rise</label><div class="toggle"></div></div>
+  </div>
+
+  <div class="sidebar-footer">
+    <button class="btn btn-primary">Upload image</button>
+    <button class="btn">Export .html</button>
+    <div class="particle-count">12,847 particles</div>
+  </div>
+</div>
+
+<div class="canvas-area">
+  <canvas id="scene"></canvas>
+  <div class="upload-overlay">
+    <div class="upload-hint">Drop your image here</div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('scene');
+const ctx = canvas.getContext('2d');
+let dots = [];
+let mouse = { x: -1000, y: -1000 };
+
+function resize() {
+  const r = canvas.getBoundingClientRect();
+  canvas.width = r.width;
+  canvas.height = r.height;
+  generateDots();
+}
+
+function generateDots() {
+  dots = [];
+  const stride = 7;
+  for (let y = 0; y < canvas.height; y += stride) {
+    for (let x = 0; x < canvas.width; x += stride) {
+      const cx = canvas.width * 0.48, cy = canvas.height * 0.48;
+      const dx = x - cx, dy = y - cy;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const maxDist = Math.min(canvas.width, canvas.height) * 0.4;
+      const br = Math.max(0, 1 - dist / maxDist);
+      if (br < 0.03 || Math.random() > br * 1.4 + 0.06) continue;
+      dots.push({
+        ox: x, oy: y, x, y, br,
+        r: 200 + br * 55,
+        g: 140 + br * 80,
+        b: 60 + br * 40,
+        size: 0.5 + br * 1.8,
+        alpha: 0.35 + br * 0.6,
+        phase: Math.random() * Math.PI * 2
+      });
+    }
+  }
+}
+
+canvas.addEventListener('mousemove', e => {
+  const r = canvas.getBoundingClientRect();
+  mouse.x = e.clientX - r.left;
+  mouse.y = e.clientY - r.top;
+});
+canvas.addEventListener('mouseleave', () => { mouse.x = -1000; mouse.y = -1000; });
+
+function animate(t) {
+  requestAnimationFrame(animate);
+  ctx.fillStyle = '#1C1917';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  const radius = 80;
+  for (const d of dots) {
+    const dx = d.ox - mouse.x, dy = d.oy - mouse.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < radius && dist > 0) {
+      const force = (1 - dist / radius) * 18;
+      d.x += (d.ox + dx / dist * force - d.x) * 0.1;
+      d.y += (d.oy + dy / dist * force - d.y) * 0.1;
+    } else {
+      d.x += (d.ox - d.x) * 0.06;
+      d.y += (d.oy - d.y) * 0.06;
+    }
+    const breathe = 0.9 + 0.1 * Math.sin(t * 0.0015 + d.phase);
+    ctx.globalAlpha = d.alpha * breathe;
+    ctx.fillStyle = `rgb(${~~d.r},${~~d.g},${~~d.b})`;
+    ctx.beginPath();
+    ctx.arc(d.x, d.y, d.size, 0, 6.2832);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+
+window.addEventListener('resize', resize);
+resize();
+requestAnimationFrame(animate);
+</script>
+</body>
+</html>

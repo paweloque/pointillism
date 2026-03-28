@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pointilism — Terminal</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --green: #33ff88;
+    --green-dim: #1a7a44;
+    --green-glow: rgba(51,255,136,0.15);
+    --amber: #ffaa33;
+    --bg: #0a0e0a;
+    --surface: #0f140f;
+    --border: #1a2a1a;
+    --text: #33ff88;
+    --text-dim: #1a7a44;
+  }
+
+  body {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+    font-size: 12px;
+  }
+
+  .sidebar {
+    width: 340px;
+    min-width: 340px;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    background: var(--surface);
+  }
+
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-track { background: var(--bg); }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--green-dim); }
+
+  .logo {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    font-weight: 500;
+    font-size: 13px;
+  }
+
+  .logo::before { content: '> '; color: var(--green-dim); }
+  .logo .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 14px;
+    background: var(--green);
+    margin-left: 2px;
+    animation: blink 1s step-end infinite;
+    vertical-align: text-bottom;
+  }
+
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .section {
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+  }
+
+  .section-title {
+    color: var(--text-dim);
+    margin-bottom: 10px;
+    font-size: 10px;
+  }
+
+  .section-title::before { content: '# '; color: var(--border); }
+
+  .control { margin-bottom: 10px; }
+  .control:last-child { margin-bottom: 0; }
+
+  .control-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+
+  .control label { font-size: 11px; }
+
+  .control .value {
+    color: var(--amber);
+    font-size: 11px;
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 2px;
+    background: var(--border);
+    outline: none;
+    cursor: pointer;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 10px;
+    height: 16px;
+    background: var(--green);
+    border: none;
+    cursor: grab;
+    box-shadow: 0 0 8px var(--green-glow);
+  }
+
+  /* Presets */
+  .preset-row { display: flex; gap: 4px; }
+
+  .preset-btn {
+    flex: 1;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 6px 0;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .preset-btn:hover { border-color: var(--green-dim); color: var(--text); }
+
+  .preset-btn.active {
+    border-color: var(--green);
+    color: var(--green);
+    background: rgba(51,255,136,0.05);
+    box-shadow: 0 0 8px var(--green-glow);
+  }
+
+  /* Colors */
+  .color-row { display: flex; gap: 6px; }
+
+  .color-swatch {
+    width: 24px;
+    height: 24px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+  }
+
+  .color-swatch.active { border-color: var(--green); box-shadow: 0 0 6px var(--green-glow); }
+
+  /* Toggles */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .toggle-row:last-child { margin-bottom: 0; }
+
+  .toggle-label { font-size: 11px; }
+
+  .toggle-state {
+    font-size: 10px;
+    cursor: pointer;
+    padding: 2px 8px;
+    border: 1px solid var(--border);
+  }
+
+  .toggle-state.on {
+    color: var(--green);
+    border-color: var(--green-dim);
+  }
+
+  .toggle-state.off {
+    color: var(--text-dim);
+  }
+
+  /* Shape */
+  .shape-row { display: flex; gap: 4px; }
+
+  .shape-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-dim);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.15s;
+  }
+
+  .shape-btn.active {
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  /* Buttons */
+  .sidebar-footer {
+    padding: 14px 20px;
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 10px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s;
+  }
+
+  .btn::before { content: '$ '; color: var(--text-dim); }
+  .btn:hover { border-color: var(--green); background: rgba(51,255,136,0.03); }
+
+  .btn-primary { border-color: var(--green-dim); }
+  .btn-primary:hover { box-shadow: 0 0 12px var(--green-glow); }
+
+  .status-line {
+    font-size: 9px;
+    color: var(--text-dim);
+    padding-top: 6px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .status-line .fps { color: var(--amber); }
+
+  /* Canvas */
+  .canvas-area {
+    flex: 1;
+    position: relative;
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  /* Scanline overlay */
+  .canvas-area::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+  }
+
+  canvas { width: 100%; height: 100%; display: block; }
+
+  .upload-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .upload-hint {
+    font-size: 11px;
+    color: var(--green-dim);
+    border: 1px dashed var(--border);
+    padding: 12px 24px;
+  }
+
+  .upload-hint::before { content: '> '; }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="logo">pointilism<span class="cursor"></span></div>
+
+  <div class="section">
+    <div class="section-title">presets</div>
+    <div class="preset-row">
+      <button class="preset-btn active">subtle</button>
+      <button class="preset-btn">dense</button>
+      <button class="preset-btn">dreamy</button>
+      <button class="preset-btn">energy</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">dots</div>
+    <div class="control">
+      <div class="control-header"><label>density</label><span class="value">3</span></div>
+      <input type="range" min="1" max="10" value="3">
+    </div>
+    <div class="control">
+      <div class="control-header"><label>size</label><span class="value">1.2px</span></div>
+      <input type="range" min="1" max="20" value="4">
+    </div>
+    <div class="control">
+      <div class="control-header"><label>scaling</label><span class="value">0.65</span></div>
+      <input type="range" min="0" max="100" value="65">
+    </div>
+    <div class="control">
+      <div class="control-header"><label>threshold</label><span class="value">0.035</span></div>
+      <input type="range" min="0" max="100" value="4">
+    </div>
+    <div class="control">
+      <label style="margin-bottom:6px;display:block">shape</label>
+      <div class="shape-row">
+        <button class="shape-btn active">&#9679;</button>
+        <button class="shape-btn">&#9632;</button>
+        <button class="shape-btn">&#10687;</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">color</div>
+    <div class="control">
+      <label style="margin-bottom:6px;display:block">background</label>
+      <div class="color-row">
+        <div class="color-swatch active" style="background:#0a0e0a"></div>
+        <div class="color-swatch" style="background:#0a0a1e"></div>
+        <div class="color-swatch" style="background:#1a0a00"></div>
+        <div class="color-swatch" style="background:#e0e0d0"></div>
+        <div class="color-swatch" style="background:#fff"></div>
+      </div>
+    </div>
+    <div class="control">
+      <div class="control-header"><label>tint</label><span class="value">off</span></div>
+      <input type="range" min="0" max="100" value="0">
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">interaction</div>
+    <div class="control">
+      <div class="control-header"><label>radius</label><span class="value">80</span></div>
+      <input type="range" min="10" max="200" value="80">
+    </div>
+    <div class="control">
+      <div class="control-header"><label>strength</label><span class="value">0.50</span></div>
+      <input type="range" min="0" max="100" value="50">
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">motion</div>
+    <div class="toggle-row"><span class="toggle-label">breathing</span><span class="toggle-state on">[ON]</span></div>
+    <div class="toggle-row"><span class="toggle-label">sway</span><span class="toggle-state off">[OFF]</span></div>
+    <div class="toggle-row"><span class="toggle-label">rise</span><span class="toggle-state off">[OFF]</span></div>
+    <div class="toggle-row"><span class="toggle-label">escape</span><span class="toggle-state off">[OFF]</span></div>
+  </div>
+
+  <div class="sidebar-footer">
+    <button class="btn btn-primary">upload image</button>
+    <button class="btn">export --output scene.html</button>
+    <div class="status-line">
+      <span>particles: 12,847</span>
+      <span class="fps">60 fps</span>
+    </div>
+  </div>
+</div>
+
+<div class="canvas-area">
+  <canvas id="scene"></canvas>
+  <div class="upload-overlay">
+    <div class="upload-hint">drop_image_here</div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('scene');
+const ctx = canvas.getContext('2d');
+let dots = [];
+let mouse = { x: -1000, y: -1000 };
+
+function resize() {
+  const r = canvas.getBoundingClientRect();
+  canvas.width = r.width;
+  canvas.height = r.height;
+  generateDots();
+}
+
+function generateDots() {
+  dots = [];
+  const stride = 6;
+  for (let y = 0; y < canvas.height; y += stride) {
+    for (let x = 0; x < canvas.width; x += stride) {
+      const cx = canvas.width / 2, cy = canvas.height / 2;
+      const dx = x - cx, dy = y - cy;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const maxDist = Math.min(cx, cy) * 0.7;
+      const br = Math.max(0, 1 - dist / maxDist);
+      if (br < 0.03 || Math.random() > br * 1.3 + 0.08) continue;
+      dots.push({
+        ox: x, oy: y, x, y, br,
+        size: 0.4 + br * 1.4,
+        alpha: 0.3 + br * 0.7,
+        phase: Math.random() * Math.PI * 2
+      });
+    }
+  }
+}
+
+canvas.addEventListener('mousemove', e => {
+  const r = canvas.getBoundingClientRect();
+  mouse.x = e.clientX - r.left;
+  mouse.y = e.clientY - r.top;
+});
+canvas.addEventListener('mouseleave', () => { mouse.x = -1000; mouse.y = -1000; });
+
+function animate(t) {
+  requestAnimationFrame(animate);
+  ctx.fillStyle = '#0a0e0a';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  const radius = 80;
+  for (const d of dots) {
+    const dx = d.ox - mouse.x, dy = d.oy - mouse.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < radius && dist > 0) {
+      const force = (1 - dist / radius) * 20;
+      d.x += (d.ox + dx / dist * force - d.x) * 0.12;
+      d.y += (d.oy + dy / dist * force - d.y) * 0.12;
+    } else {
+      d.x += (d.ox - d.x) * 0.07;
+      d.y += (d.oy - d.y) * 0.07;
+    }
+    const breathe = 0.85 + 0.15 * Math.sin(t * 0.002 + d.phase);
+    ctx.globalAlpha = d.alpha * breathe;
+    ctx.fillStyle = `rgb(${~~(40 + d.br * 20)},${~~(180 + d.br * 75)},${~~(80 + d.br * 55)})`;
+    ctx.beginPath();
+    ctx.arc(d.x, d.y, d.size, 0, 6.2832);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+
+window.addEventListener('resize', resize);
+resize();
+requestAnimationFrame(animate);
+</script>
+</body>
+</html>
