@@ -40,7 +40,7 @@ export function coverFit(img, width, height, focalX = 0.5, focalY = 0.5) {
  */
 export function samplePixels(data, width, height, options = {}) {
   const {
-    stride = DEFAULT_STRIDE,
+    stride: requestedStride = DEFAULT_STRIDE,
     threshold = DEFAULT_THRESHOLD,
     baseSize = DEFAULT_BASE_SIZE,
     sizeScaling = DEFAULT_SIZE_SCALING,
@@ -48,16 +48,19 @@ export function samplePixels(data, width, height, options = {}) {
     alphaScaling = DEFAULT_ALPHA_SCALING,
   } = options;
 
+  // Adaptive stride: ensure we can cover the whole image within budget.
+  // Estimate candidate pixels at requested stride, then bump stride if needed.
+  let stride = requestedStride;
+  const candidateCount = Math.ceil(width / stride) * Math.ceil(height / stride);
+  if (candidateCount > MAX_PARTICLES) {
+    stride = Math.ceil(Math.sqrt((width * height) / MAX_PARTICLES));
+    if (stride < requestedStride) stride = requestedStride;
+  }
+
   const dots = [];
-  let capped = false;
 
   for (let y = 0; y < height; y += stride) {
     for (let x = 0; x < width; x += stride) {
-      if (dots.length >= MAX_PARTICLES) {
-        capped = true;
-        break;
-      }
-
       const i = (y * width + x) * 4;
       const r = data[i];
       const g = data[i + 1];
@@ -78,16 +81,14 @@ export function samplePixels(data, width, height, options = {}) {
         alpha: baseAlpha + brightness * alphaScaling,
       });
     }
-    if (capped) break;
   }
 
-  if (capped) {
-    console.warn(
-      `Particle budget exceeded (${MAX_PARTICLES}). Increase stride or raise threshold.`
-    );
-  }
-
-  return { dots, particleCount: dots.length, capped };
+  return {
+    dots,
+    particleCount: dots.length,
+    stride,
+    adaptedStride: stride !== requestedStride,
+  };
 }
 
 /**

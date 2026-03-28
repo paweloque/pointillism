@@ -20,7 +20,7 @@ describe('samplePixels', () => {
     const data = makePixels(12, 12, 255, 255, 255);
     const result = samplePixels(data, 12, 12, { stride: 3 });
     expect(result.dots.length).toBeGreaterThan(0);
-    expect(result.capped).toBe(false);
+    expect(result.adaptedStride).toBe(false);
   });
 
   it('skips near-black pixels', () => {
@@ -65,11 +65,20 @@ describe('samplePixels', () => {
     expect(dot.b).toBe(50);
   });
 
-  it('caps at MAX_PARTICLES', () => {
+  it('adapts stride to stay within particle budget', () => {
     const data = makePixels(300, 300, 255, 255, 255);
     const result = samplePixels(data, 300, 300, { stride: 1 });
     expect(result.particleCount).toBeLessThanOrEqual(MAX_PARTICLES);
-    expect(result.capped).toBe(true);
+    expect(result.adaptedStride).toBe(true);
+    expect(result.stride).toBeGreaterThan(1);
+  });
+
+  it('covers the full image when stride is adapted', () => {
+    const data = makePixels(500, 500, 255, 255, 255);
+    const result = samplePixels(data, 500, 500, { stride: 1 });
+    // Last dot should be near the bottom of the image
+    const lastDot = result.dots[result.dots.length - 1];
+    expect(lastDot.y).toBeGreaterThan(400);
   });
 
   it('respects stride parameter', () => {
