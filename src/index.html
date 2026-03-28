@@ -614,17 +614,23 @@
 
   <div class="section">
     <div class="section-title"><span>Interaction</span><button class="reset-link" data-reset="interaction">reset</button></div>
-    <div class="control">
-      <div class="control-header">
-        <label>Radius</label><span class="value" id="val-radius">80px</span>
-      </div>
-      <input type="range" id="ctrl-radius" min="10" max="200" value="80">
+    <div class="toggle-row">
+      <label style="font-size:0.8rem">Enabled</label>
+      <div class="toggle on" data-toggle="interactionEnabled"></div>
     </div>
-    <div class="control">
-      <div class="control-header">
-        <label>Strength</label><span class="value" id="val-strength">18</span>
+    <div id="interaction-controls">
+      <div class="control">
+        <div class="control-header">
+          <label>Radius</label><span class="value" id="val-radius">80px</span>
+        </div>
+        <input type="range" id="ctrl-radius" min="10" max="200" value="80">
       </div>
-      <input type="range" id="ctrl-strength" min="1" max="50" value="18">
+      <div class="control">
+        <div class="control-header">
+          <label>Strength</label><span class="value" id="val-strength">18</span>
+        </div>
+        <input type="range" id="ctrl-strength" min="1" max="50" value="18">
+      </div>
     </div>
   </div>
 

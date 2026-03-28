@@ -38,6 +38,7 @@ export function generateExportHTML(img) {
     escape: s.escape,
     sparkle: s.sparkle,
     sparkleSpeed: s.sparkleSpeed,
+    interactionEnabled: s.interactionEnabled,
     textContent: s.textContent,
     textFont: s.textFont,
     textSize: s.textSize,
@@ -137,8 +138,8 @@ if(C.breathing){am*=(1-C.breatheIntensity)+C.breatheIntensity*Math.sin(t*d.bf+d.
 if(C.sparkle){const p=(t*C.sparkleSpeed/d.ld+d.lo)%1;am*=p<0.15?p/0.15:p<0.75?1:1-(p-0.75)/0.25}
 d.drawAlpha=d.alpha*am;
 d.x+=(px-d.x)*ea;d.y+=(py-d.y)*ea;
-const dx=d.ox-mouse.x,dy=d.oy-mouse.y;const dist=Math.sqrt(dx*dx+dy*dy);
-if(dist<C.mouseRadius&&dist>0){const f=(1-dist/C.mouseRadius)*C.mouseStrength;d.x+=dx/dist*f*ea;d.y+=dy/dist*f*ea}
+if(C.interactionEnabled){const dx=d.ox-mouse.x,dy=d.oy-mouse.y;const dist=Math.sqrt(dx*dx+dy*dy);
+if(dist<C.mouseRadius&&dist>0){const f=(1-dist/C.mouseRadius)*C.mouseStrength;d.x+=dx/dist*f*ea;d.y+=dy/dist*f*ea}}
 }
 draw();
 }

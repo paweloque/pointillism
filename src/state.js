@@ -19,6 +19,7 @@ const DEFAULTS = {
   textX: 0.5,
   textY: 0.5,
   // Interaction
+  interactionEnabled: true,
   mouseRadius: 80,
   mouseStrength: 18,
   mouseEasing: 0.08,
@@ -39,7 +40,7 @@ const RESAMPLE_KEYS = new Set(['stride', 'threshold', 'bgColor', 'focalX', 'foca
 const GROUPS = {
   dots: ['stride', 'dotSize', 'sizeScaling', 'threshold', 'dotShape', 'focalX', 'focalY'],
   color: ['bgColor', 'tintColor', 'tintBlend'],
-  interaction: ['mouseRadius', 'mouseStrength', 'mouseEasing'],
+  interaction: ['interactionEnabled', 'mouseRadius', 'mouseStrength', 'mouseEasing'],
   motion: ['breathing', 'breatheIntensity', 'sway', 'swayIntensity', 'rise', 'riseSpeedMultiplier', 'escape', 'sparkle', 'sparkleSpeed'],
 };
 

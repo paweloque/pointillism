@@ -264,7 +264,7 @@ function updateDots(t) {
   }
 
   // Mouse displacement via spatial grid
-  if (grid && mouse.x > -1000) {
+  if (state.interactionEnabled && grid && mouse.x > -1000) {
     const radius = state.mouseRadius;
     const strength = state.mouseStrength;
     const nearby = queryRadius(grid, mouse.x, mouse.y, radius);
@@ -442,8 +442,17 @@ document.querySelectorAll('.toggle').forEach((el) => {
     const key = el.dataset.toggle;
     set(key, !state[key]);
     el.classList.toggle('on');
+    if (key === 'interactionEnabled') updateInteractionDim();
   });
 });
+
+function updateInteractionDim() {
+  const el = document.getElementById('interaction-controls');
+  if (el) {
+    el.style.opacity = state.interactionEnabled ? '' : '0.4';
+    el.style.pointerEvents = state.interactionEnabled ? '' : 'none';
+  }
+}
 
 // Preset buttons
 const PRESETS = {
