@@ -90,6 +90,14 @@ export function samplePixels(data, width, height, options = {}) {
         if (brightness < threshold) continue;
       }
 
+      // Physics properties (per-dot randomized)
+      const edginess = Math.max(0, 1 - Math.abs(brightness - 0.5) * 1.5);
+
+      // Escape: cubic random — most near zero, few scatter far
+      const u = Math.random();
+      const escapeStrength = u * u * u;
+      const escapeAngle = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.2;
+
       dots.push({
         ox: x,
         oy: y,
@@ -101,6 +109,23 @@ export function samplePixels(data, width, height, options = {}) {
         b,
         size: baseSize + brightness * sizeScaling,
         alpha: baseAlpha + brightness * alphaScaling,
+        // Breathing
+        breathePhase: Math.random() * Math.PI * 2,
+        breatheFreq: 0.00008 + Math.random() * 0.0001,
+        // Sway
+        swayPhaseX: Math.random() * Math.PI * 2,
+        swayPhaseY: Math.random() * Math.PI * 2,
+        swayFreqX: 0.00004 + Math.random() * 0.00006,
+        swayFreqY: 0.00003 + Math.random() * 0.00005,
+        swayAmpX: 0.3 + edginess * 1.2 + Math.random() * 0.5,
+        swayAmpY: 0.2 + edginess * 0.8 + Math.random() * 0.4,
+        // Rise
+        riseSpeed: 0.0008 + Math.random() * 0.0012,
+        maxRise: 6 + Math.random() * 14 + brightness * 8,
+        riseOffset: Math.random(),
+        // Escape
+        escapeDX: Math.cos(escapeAngle) * escapeStrength * 30,
+        escapeDY: Math.sin(escapeAngle) * escapeStrength * 22,
       });
     }
   }

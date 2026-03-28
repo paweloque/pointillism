@@ -124,40 +124,81 @@ function resize() {
 
 // --- Animation loop ---
 
-function updateDots() {
+function updateDots(t) {
   const easing = state.mouseEasing;
+  const doBreathing = state.breathing;
+  const doSway = state.sway;
+  const doRise = state.rise;
 
   for (let i = 0; i < dots.length; i++) {
     const d = dots[i];
-    d.x += (d.ox - d.x) * easing;
-    d.y += (d.oy - d.y) * easing;
+
+    // Base position (origin)
+    let px = d.ox;
+    let py = d.oy;
+    let alphaMultiplier = 1;
+
+    // Sway: lateral drift
+    if (doSway) {
+      px += Math.sin(t * d.swayFreqX + d.swayPhaseX) * d.swayAmpX;
+      py += Math.cos(t * d.swayFreqY + d.swayPhaseY) * d.swayAmpY * 0.4;
+    }
+
+    // Rise: upward drift with loop
+    if (doRise) {
+      const rise = ((d.riseOffset * d.maxRise) + t * d.riseSpeed) % d.maxRise;
+      const progress = rise / d.maxRise;
+      py -= rise;
+
+      // Fade in/out
+      const fadeIn = Math.min(1, progress * 6);
+      const fadeOut = Math.min(1, (1 - progress) * 5);
+      alphaMultiplier *= fadeIn * fadeOut;
+
+      // Escape
+      const escapeProgress = Math.max(0, (progress - 0.65) / 0.35);
+      const escapeCurve = escapeProgress * escapeProgress;
+      px += d.escapeDX * escapeCurve;
+      py += d.escapeDY * escapeCurve;
+    }
+
+    // Breathing: opacity pulse
+    if (doBreathing) {
+      const breathe = 0.88 + 0.12 * Math.sin(t * d.breatheFreq + d.breathePhase);
+      alphaMultiplier *= breathe;
+    }
+
+    d.drawAlpha = d.alpha * alphaMultiplier;
+
+    // Ease toward physics target
+    d.x += (px - d.x) * easing;
+    d.y += (py - d.y) * easing;
   }
 
-  if (!grid || mouse.x < -1000) return;
+  // Mouse displacement via spatial grid
+  if (grid && mouse.x > -1000) {
+    const radius = state.mouseRadius;
+    const strength = state.mouseStrength;
+    const nearby = queryRadius(grid, mouse.x, mouse.y, radius);
 
-  const radius = state.mouseRadius;
-  const strength = state.mouseStrength;
-  const nearby = queryRadius(grid, mouse.x, mouse.y, radius);
+    for (let i = 0; i < nearby.length; i++) {
+      const d = nearby[i];
+      const dx = d.ox - mouse.x;
+      const dy = d.oy - mouse.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
 
-  for (let i = 0; i < nearby.length; i++) {
-    const d = nearby[i];
-    const dx = d.ox - mouse.x;
-    const dy = d.oy - mouse.y;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-
-    if (dist < radius && dist > 0) {
-      const force = (1 - dist / radius) * strength;
-      const targetX = d.ox + (dx / dist) * force;
-      const targetY = d.oy + (dy / dist) * force;
-      d.x += (targetX - d.x) * easing;
-      d.y += (targetY - d.y) * easing;
+      if (dist < radius && dist > 0) {
+        const force = (1 - dist / radius) * strength;
+        d.x += (dx / dist) * force * easing;
+        d.y += (dy / dist) * force * easing;
+      }
     }
   }
 }
 
 function animate(t) {
   requestAnimationFrame(animate);
-  updateDots();
+  updateDots(t);
   drawDots(ctx, dots, state.bgColor, state.dotShape, {
     color: state.tintColor,
     blend: state.tintBlend,

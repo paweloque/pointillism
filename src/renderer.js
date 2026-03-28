@@ -50,7 +50,7 @@ export function drawDots(ctx, dots, bgColor = '#000', shape = 'circle', tint = n
 function drawCircles(ctx, dots, tintRgb, blend) {
   for (let i = 0; i < dots.length; i++) {
     const d = dots[i];
-    ctx.globalAlpha = d.alpha;
+    ctx.globalAlpha = d.drawAlpha !== undefined ? d.drawAlpha : d.alpha;
     ctx.fillStyle = tintedColor(d, tintRgb, blend);
     ctx.beginPath();
     ctx.arc(d.x, d.y, d.size, 0, 6.2832);
@@ -61,7 +61,7 @@ function drawCircles(ctx, dots, tintRgb, blend) {
 function drawSquares(ctx, dots, tintRgb, blend) {
   for (let i = 0; i < dots.length; i++) {
     const d = dots[i];
-    ctx.globalAlpha = d.alpha;
+    ctx.globalAlpha = d.drawAlpha !== undefined ? d.drawAlpha : d.alpha;
     ctx.fillStyle = tintedColor(d, tintRgb, blend);
     const s = d.size * 2;
     ctx.fillRect(d.x - d.size, d.y - d.size, s, s);
