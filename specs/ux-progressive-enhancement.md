@@ -4,6 +4,10 @@
 
 The app adapts to screen size by progressively revealing functionality. Smaller screens show a focused, usable subset. Larger screens unlock the full parameter playground. The dot canvas is always the star — controls never compete with it for space.
 
+## Design decision
+
+**Chosen style: minimal-mono** (see `prototypes/minimal-mono/`). Black and white, fine 1px black lines, maximum whitespace, Inter typeface. The full visual language is documented in `specs/ux-styleguide.md`.
+
 ## Design philosophy
 
 - **Minimalistic but lovable** — clean lines, generous whitespace, no visual clutter. The UI should feel calm and intentional, not sterile.

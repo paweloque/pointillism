@@ -17,6 +17,7 @@ When something new comes up mid-implementation, stop and go back to step 1.
   - `ux-progressive-enhancement.md` — responsive UX strategy (mobile/tablet/desktop)
   - `roadmap.md` — phased build plan (input for task generation)
   - `performance.md` — performance targets, spatial indexing, adaptive stride
+  - `ux-styleguide.md` — visual design system (minimal-mono: tokens, components, spacing)
 - `plan/tasks/` — active implementation tasks (derived from specs)
 - `plan/done/` — completed tasks (moved here from `plan/tasks/` once done)
 
