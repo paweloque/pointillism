@@ -1,6 +1,6 @@
 export const MAX_PARTICLES = 50000;
 export const DEFAULT_STRIDE = 3;
-export const DEFAULT_THRESHOLD = 0.035;
+export const DEFAULT_THRESHOLD = 0.01;
 export const DEFAULT_BASE_SIZE = 0.4;
 export const DEFAULT_SIZE_SCALING = 0.65;
 export const DEFAULT_BASE_ALPHA = 0.4;
