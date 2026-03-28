@@ -58,6 +58,60 @@
     height: 100%;
     display: block;
   }
+
+  .upload-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1;
+  }
+
+  .upload-hint {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: lowercase;
+    color: #555;
+    border: 1px solid #333;
+    padding: 14px 28px;
+    transition: border-color 0.15s, color 0.15s;
+  }
+
+  .upload-overlay:hover .upload-hint {
+    color: #888;
+    border-color: #555;
+  }
+
+  .canvas-area.dragover .upload-hint {
+    color: #aaa;
+    border-color: #888;
+  }
+
+  .upload-overlay.hidden {
+    display: none;
+  }
+
+  .upload-error {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: #888;
+    border: 1px solid #444;
+    padding: 8px 20px;
+    background: rgba(0,0,0,0.8);
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .upload-error.visible {
+    opacity: 1;
+  }
 </style>
 </head>
 <body>
@@ -66,8 +120,13 @@
   <div class="logo">pointilism</div>
 </div>
 
-<div class="canvas-area">
+<div class="canvas-area" id="canvas-area">
   <canvas id="scene"></canvas>
+  <div class="upload-overlay" id="upload-overlay">
+    <div class="upload-hint">drop image or click to upload</div>
+  </div>
+  <div class="upload-error" id="upload-error"></div>
+  <input type="file" id="file-input" accept="image/*" hidden>
 </div>
 
 <script type="module" src="./main.js"></script>
