@@ -3,6 +3,7 @@ import { drawDots } from './renderer.js';
 import { createDemoImage } from './demo-image.js';
 import { buildGrid, queryRadius } from './spatial-grid.js';
 import { state, set, onChange, resetState, resetGroup } from './state.js';
+import { downloadExport } from './export.js';
 
 const canvas = document.getElementById('scene');
 const ctx = canvas.getContext('2d');
@@ -377,6 +378,12 @@ canvasArea.addEventListener('drop', (e) => {
   canvasArea.classList.remove('dragover');
   const file = e.dataTransfer.files[0];
   if (file) handleFile(file);
+});
+
+// --- Export ---
+
+document.getElementById('btn-export').addEventListener('click', () => {
+  if (currentImage) downloadExport(currentImage);
 });
 
 // --- Responsive: sidebar toggle + bottom sheet ---
