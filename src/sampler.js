@@ -141,6 +141,9 @@ export function samplePixels(data, width, height, options = {}) {
         // Sparkle (lifecycle)
         lifecycleDuration: 4000 + Math.random() * 8000,
         lifecycleOffset: Math.random(),
+        // Brownian
+        brownX: 0,
+        brownY: 0,
       });
     }
   }

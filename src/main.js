@@ -201,6 +201,9 @@ function updateDots(t) {
   const doEscape = state.escape;
   const doSparkle = state.sparkle;
   const sparkleSpeed = state.sparkleSpeed;
+  const doBrownian = state.brownian;
+  const brownStr = state.brownianStrength;
+  const brownMax = 8; // max drift radius in pixels
 
   for (let i = 0; i < dots.length; i++) {
     const d = dots[i];
@@ -254,6 +257,22 @@ function updateDots(t) {
         sparkleAlpha = 1 - (progress - 0.75) / 0.25; // fade out
       }
       alphaMultiplier *= sparkleAlpha;
+    }
+
+    // Brownian: random walk with mean reversion
+    if (doBrownian) {
+      d.brownX += (Math.random() - 0.5) * brownStr;
+      d.brownY += (Math.random() - 0.5) * brownStr;
+      d.brownX *= 0.995;
+      d.brownY *= 0.995;
+      // Clamp to max drift
+      const bd = Math.sqrt(d.brownX * d.brownX + d.brownY * d.brownY);
+      if (bd > brownMax) {
+        d.brownX *= brownMax / bd;
+        d.brownY *= brownMax / bd;
+      }
+      px += d.brownX;
+      py += d.brownY;
     }
 
     d.drawAlpha = d.alpha * alphaMultiplier;
@@ -357,6 +376,7 @@ function syncControlsFromState() {
   setSlider('ctrl-sway-int', 'val-sway-int', state.swayIntensity * 100, Math.round(state.swayIntensity * 100) + '%');
   setSlider('ctrl-rise-speed', 'val-rise-speed', state.riseSpeedMultiplier * 100, Math.round(state.riseSpeedMultiplier * 100) + '%');
   setSlider('ctrl-sparkle-speed', 'val-sparkle-speed', state.sparkleSpeed * 100, Math.round(state.sparkleSpeed * 100) + '%');
+  setSlider('ctrl-brownian-str', 'val-brownian-str', state.brownianStrength * 100, Math.round(state.brownianStrength * 100) + '%');
 
   // Focal point
   updateFocalPointPosition();
@@ -415,6 +435,7 @@ wireSlider('ctrl-breathe-int', 'val-breathe-int', 'breatheIntensity', (v) => v /
 wireSlider('ctrl-sway-int', 'val-sway-int', 'swayIntensity', (v) => v / 100, (v) => Math.round(v * 100) + '%');
 wireSlider('ctrl-rise-speed', 'val-rise-speed', 'riseSpeedMultiplier', (v) => v / 100, (v) => Math.round(v * 100) + '%');
 wireSlider('ctrl-sparkle-speed', 'val-sparkle-speed', 'sparkleSpeed', (v) => v / 100, (v) => Math.round(v * 100) + '%');
+wireSlider('ctrl-brownian-str', 'val-brownian-str', 'brownianStrength', (v) => v / 100, (v) => Math.round(v * 100) + '%');
 
 // Physics presets
 const PHYSICS_PRESETS = {

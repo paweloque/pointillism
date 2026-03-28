@@ -38,6 +38,8 @@ export function generateExportHTML(img) {
     escape: s.escape,
     sparkle: s.sparkle,
     sparkleSpeed: s.sparkleSpeed,
+    brownian: s.brownian,
+    brownianStrength: s.brownianStrength,
     interactionEnabled: s.interactionEnabled,
     textContent: s.textContent,
     textFont: s.textFont,
@@ -103,7 +105,8 @@ sfx:0.00004+Math.random()*0.00006,sfy:0.00003+Math.random()*0.00005,
 sax:0.3+e*1.2+Math.random()*0.5,say:0.2+e*0.8+Math.random()*0.4,
 rs:0.0008+Math.random()*0.0012,mr:6+Math.random()*14+br*8,ro:Math.random(),
 edx:Math.cos(ea)*es*30,edy:Math.sin(ea)*es*22,
-ld:4000+Math.random()*8000,lo:Math.random()
+ld:4000+Math.random()*8000,lo:Math.random(),
+bx:0,by:0
 });
 }}
 }
@@ -136,6 +139,7 @@ if(C.sway){px+=Math.sin(t*d.sfx+d.spx)*d.sax*C.swayIntensity;py+=Math.cos(t*d.sf
 if(C.rise){const rise=(d.ro*d.mr+t*d.rs*C.riseSpeedMultiplier)%d.mr;const p=rise/d.mr;py-=rise;am*=Math.min(1,p*6)*Math.min(1,(1-p)*5);if(C.escape){const ep=Math.max(0,(p-0.65)/0.35);const ec=ep*ep;px+=d.edx*ec;py+=d.edy*ec}}
 if(C.breathing){am*=(1-C.breatheIntensity)+C.breatheIntensity*Math.sin(t*d.bf+d.bp)}
 if(C.sparkle){const p=(t*C.sparkleSpeed/d.ld+d.lo)%1;am*=p<0.15?p/0.15:p<0.75?1:1-(p-0.75)/0.25}
+if(C.brownian){d.bx+=(Math.random()-0.5)*C.brownianStrength;d.by+=(Math.random()-0.5)*C.brownianStrength;d.bx*=0.995;d.by*=0.995;const bd=Math.sqrt(d.bx*d.bx+d.by*d.by);if(bd>8){d.bx*=8/bd;d.by*=8/bd}px+=d.bx;py+=d.by}
 d.drawAlpha=d.alpha*am;
 d.x+=(px-d.x)*ea;d.y+=(py-d.y)*ea;
 if(C.interactionEnabled){const dx=d.ox-mouse.x,dy=d.oy-mouse.y;const dist=Math.sqrt(dx*dx+dy*dy);
