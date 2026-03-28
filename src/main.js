@@ -15,6 +15,24 @@ let W = 0;
 let H = 0;
 let animating = false;
 
+// --- Mouse ---
+
+const mouse = { x: -9999, y: -9999 };
+const MOUSE_RADIUS = 80;
+const MOUSE_STRENGTH = 18;
+const MOUSE_EASING = 0.08;
+
+canvas.addEventListener('mousemove', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  mouse.x = e.clientX - rect.left;
+  mouse.y = e.clientY - rect.top;
+});
+
+canvas.addEventListener('mouseleave', () => {
+  mouse.x = -9999;
+  mouse.y = -9999;
+});
+
 function resample() {
   if (!currentImage || !W || !H) return;
   const result = sampleImage(currentImage, W, H);
@@ -35,8 +53,30 @@ function resize() {
 
 // --- Animation loop ---
 
+function updateDots() {
+  for (let i = 0; i < dots.length; i++) {
+    const d = dots[i];
+    const dx = d.ox - mouse.x;
+    const dy = d.oy - mouse.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    let targetX = d.ox;
+    let targetY = d.oy;
+
+    if (dist < MOUSE_RADIUS && dist > 0) {
+      const force = (1 - dist / MOUSE_RADIUS) * MOUSE_STRENGTH;
+      targetX = d.ox + (dx / dist) * force;
+      targetY = d.oy + (dy / dist) * force;
+    }
+
+    d.x += (targetX - d.x) * MOUSE_EASING;
+    d.y += (targetY - d.y) * MOUSE_EASING;
+  }
+}
+
 function animate(t) {
   requestAnimationFrame(animate);
+  updateDots();
   drawDots(ctx, dots);
 }
 
