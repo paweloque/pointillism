@@ -98,7 +98,10 @@ function updateDots() {
 function animate(t) {
   requestAnimationFrame(animate);
   updateDots();
-  drawDots(ctx, dots, state.bgColor, state.dotShape);
+  drawDots(ctx, dots, state.bgColor, state.dotShape, {
+    color: state.tintColor,
+    blend: state.tintBlend,
+  });
 }
 
 function startLoop() {
@@ -174,6 +177,14 @@ wireSlider('ctrl-size', 'val-size', 'dotSize', (v) => v / 10, (v) => v.toFixed(1
 wireSlider('ctrl-scaling', 'val-scaling', 'sizeScaling', (v) => v / 100, (v) => Math.round(v * 100) + '%');
 wireSlider('ctrl-threshold', 'val-threshold', 'threshold', (v) => v / 100, (v) => Math.round(v * 100) + '%');
 wireSlider('ctrl-tint', 'val-tint', 'tintBlend', (v) => v, (v) => v > 0 ? v + '%' : 'off');
+
+// Tint color picker
+const tintColorInput = document.getElementById('ctrl-tint-color');
+tintColorInput.addEventListener('input', () => {
+  set('tintColor', tintColorInput.value);
+});
+// Set initial tint color from picker default
+set('tintColor', tintColorInput.value);
 wireSlider('ctrl-radius', 'val-radius', 'mouseRadius', (v) => v, (v) => v + 'px');
 wireSlider('ctrl-strength', 'val-strength', 'mouseStrength', (v) => v, (v) => String(v));
 

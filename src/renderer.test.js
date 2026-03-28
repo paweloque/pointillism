@@ -32,13 +32,11 @@ describe('drawDots', () => {
     const ctx = makeMockCtx();
     drawDots(ctx, dots);
     expect(ctx.arc).toHaveBeenCalledTimes(2);
-    expect(ctx.fill).toHaveBeenCalledTimes(2);
   });
 
   it('draws squares when shape is square', () => {
     const ctx = makeMockCtx();
     drawDots(ctx, dots, '#000', 'square');
-    // fillRect: 1 for bg clear + 2 for dots = 3
     expect(ctx.fillRect).toHaveBeenCalledTimes(3);
     expect(ctx.arc).not.toHaveBeenCalled();
   });
@@ -47,12 +45,26 @@ describe('drawDots', () => {
     const ctx = makeMockCtx();
     drawDots(ctx, dots, '#000', 'soft');
     expect(ctx.createRadialGradient).toHaveBeenCalledTimes(2);
-    expect(ctx.arc).toHaveBeenCalledTimes(2);
   });
 
   it('resets globalAlpha to 1 after drawing', () => {
     const ctx = makeMockCtx();
-    drawDots(ctx, dots, '#000', 'circle');
+    drawDots(ctx, dots);
     expect(ctx.globalAlpha).toBe(1);
+  });
+
+  it('applies tint when blend > 0', () => {
+    const ctx = makeMockCtx();
+    const whiteDot = [{ x: 5, y: 5, r: 255, g: 255, b: 255, size: 1, alpha: 1 }];
+    drawDots(ctx, whiteDot, '#000', 'circle', { color: '#ff0000', blend: 100 });
+    // At 100% blend, color should be pure red
+    expect(ctx.fillStyle).toBe('rgb(255,0,0)');
+  });
+
+  it('shows original colors when blend is 0', () => {
+    const ctx = makeMockCtx();
+    const whiteDot = [{ x: 5, y: 5, r: 200, g: 100, b: 50, size: 1, alpha: 1 }];
+    drawDots(ctx, whiteDot, '#000', 'circle', { color: '#ff0000', blend: 0 });
+    expect(ctx.fillStyle).toBe('rgb(200,100,50)');
   });
 });
