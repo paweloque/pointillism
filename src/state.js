@@ -35,6 +35,8 @@ const DEFAULTS = {
   sparkleSpeed: 1.0,
   brownian: false,
   brownianStrength: 0.5,
+  sonification: false,
+  sonificationVolume: 50,
 };
 
 const RESAMPLE_KEYS = new Set(['stride', 'threshold', 'bgColor', 'focalX', 'focalY', 'textContent', 'textFont', 'textSize', 'textX', 'textY']);
@@ -44,6 +46,7 @@ const GROUPS = {
   color: ['bgColor', 'tintColor', 'tintBlend'],
   interaction: ['interactionEnabled', 'mouseRadius', 'mouseStrength', 'mouseEasing'],
   motion: ['breathing', 'breatheIntensity', 'sway', 'swayIntensity', 'rise', 'riseSpeedMultiplier', 'escape', 'sparkle', 'sparkleSpeed', 'brownian', 'brownianStrength'],
+  sound: ['sonification', 'sonificationVolume'],
 };
 
 const listeners = [];

@@ -14,7 +14,9 @@
       "Bash(npm run:*)",
       "Bash(find /Users/pawel/workspace/pointilism/plan -type f -name *.md)",
       "Bash(git remote:*)",
-      "Bash(npm i:*)"
+      "Bash(npm i:*)",
+      "Bash(git cherry-pick:*)",
+      "Bash(git rm:*)"
     ]
   }
 }
