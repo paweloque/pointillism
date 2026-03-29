@@ -35,13 +35,14 @@ The app adapts to screen size by progressively revealing functionality. Smaller 
 
 - Full-viewport canvas with the dot effect
 - Upload button (floating, minimal)
-- Tap to toggle a compact bottom sheet with essential controls:
-  - Background color
-  - Dot stride (density)
-  - Dot size
-- Export button inside the bottom sheet
+- Tap to toggle a compact bottom sheet with:
+  - Style presets (subtle / dense / dreamy / energy)
+  - Motion presets (off / subtle / animated)
+  - Background color swatches
+- Export buttons inside the bottom sheet
+- Explicit close button (not just a handle bar)
 - No text overlay editing (too cramped to be useful)
-- Mouse interaction replaced by gyroscope/tilt where available
+- No fiddly sliders — presets give quick, impressive results on small screens
 
 ### Medium (640px–1024px) — Tablet
 

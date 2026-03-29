@@ -12,7 +12,9 @@
       "Bash(git commit:*)",
       "Bash(npm install:*)",
       "Bash(npm run:*)",
-      "Bash(find /Users/pawel/workspace/pointilism/plan -type f -name *.md)"
+      "Bash(find /Users/pawel/workspace/pointilism/plan -type f -name *.md)",
+      "Bash(git remote:*)",
+      "Bash(npm i:*)"
     ]
   }
 }

@@ -636,7 +636,7 @@ mobileFab.addEventListener('click', () => {
   bottomSheet.classList.toggle('open');
 });
 
-document.getElementById('bottom-sheet-handle').addEventListener('click', () => {
+document.getElementById('bottom-sheet-close').addEventListener('click', () => {
   bottomSheet.classList.remove('open');
 });
 
@@ -645,10 +645,6 @@ canvasArea.addEventListener('click', (e) => {
     bottomSheet.classList.remove('open');
   }
 });
-
-// Wire mobile bottom sheet controls
-wireSlider('ctrl-stride-m', 'val-stride-m', 'stride', (v) => v, (v) => String(v));
-wireSlider('ctrl-size-m', 'val-size-m', 'dotSize', (v) => v / 10, (v) => (v / 10).toFixed(1));
 
 document.getElementById('btn-upload-m').addEventListener('click', () => fileInput.click());
 document.getElementById('btn-export-m').addEventListener('click', () => {

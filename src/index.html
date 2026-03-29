@@ -548,23 +548,20 @@
     transform: translateY(0);
   }
 
-  .bottom-sheet-handle {
-    display: flex;
-    justify-content: center;
-    padding: 8px 0 12px;
+  .bottom-sheet-close {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--mid);
+    text-align: center;
+    padding: 4px 0 14px;
     cursor: pointer;
+    transition: color 0.15s;
   }
 
-  .bottom-sheet-handle::after {
-    content: '';
-    width: 32px;
-    height: 2px;
-    background: var(--mid);
-    transition: background 0.15s;
-  }
-
-  .bottom-sheet-handle:hover::after {
-    background: var(--ink);
+  .bottom-sheet-close:hover {
+    color: var(--ink);
   }
 
   .bottom-sheet .control { margin-bottom: 14px; }
@@ -797,7 +794,24 @@
   <input type="file" id="file-input" accept="image/*" hidden>
   <button class="mobile-fab" id="mobile-fab">&#9881;</button>
   <div class="bottom-sheet" id="bottom-sheet">
-    <div class="bottom-sheet-handle" id="bottom-sheet-handle"></div>
+    <div class="bottom-sheet-close" id="bottom-sheet-close">&#10005; close</div>
+    <div class="control">
+      <div class="section-title" style="border:none;padding:0">Preset</div>
+      <div class="preset-row">
+        <button class="preset-btn active" data-preset="subtle">subtle</button>
+        <button class="preset-btn" data-preset="dense">dense</button>
+        <button class="preset-btn" data-preset="dreamy">dreamy</button>
+        <button class="preset-btn" data-preset="energy">energy</button>
+      </div>
+    </div>
+    <div class="control">
+      <div class="section-title" style="border:none;padding:0">Motion</div>
+      <div class="preset-row">
+        <button class="preset-btn" data-physics="off">off</button>
+        <button class="preset-btn" data-physics="subtle">subtle</button>
+        <button class="preset-btn" data-physics="animated">animated</button>
+      </div>
+    </div>
     <div class="control">
       <label style="margin-bottom:8px;display:block">Background</label>
       <div class="color-row">
@@ -807,18 +821,6 @@
         <div class="color-swatch" data-color="#eee" style="background:#eee"></div>
         <div class="color-swatch" data-color="#fff" style="background:#fff"></div>
       </div>
-    </div>
-    <div class="control">
-      <div class="control-header">
-        <label>Density</label><span class="value" id="val-stride-m">3</span>
-      </div>
-      <input type="range" id="ctrl-stride-m" min="1" max="10" value="3">
-    </div>
-    <div class="control">
-      <div class="control-header">
-        <label>Size</label><span class="value" id="val-size-m">0.4</span>
-      </div>
-      <input type="range" id="ctrl-size-m" min="1" max="30" value="4">
     </div>
     <div class="control" style="margin-top:14px">
       <button class="btn btn-primary" id="btn-upload-m" style="width:100%">upload image</button>
