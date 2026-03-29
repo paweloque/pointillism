@@ -298,6 +298,15 @@
     gap: 8px;
   }
 
+  .export-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .export-row .btn {
+    flex: 1;
+  }
+
   .btn {
     font-family: 'Inter', sans-serif;
     font-size: 0.75rem;
@@ -764,7 +773,10 @@
 
   <div class="sidebar-footer">
     <button class="btn btn-primary" id="btn-upload">upload image</button>
-    <button class="btn" id="btn-export">export .html</button>
+    <div class="export-row">
+      <button class="btn" id="btn-export">export .html</button>
+      <button class="btn" id="btn-export-png">export .png</button>
+    </div>
     <div class="particle-count" id="particle-count">0 particles</div>
   </div>
 </div>
@@ -812,7 +824,10 @@
       <button class="btn btn-primary" id="btn-upload-m" style="width:100%">upload image</button>
     </div>
     <div class="control">
-      <button class="btn" id="btn-export-m" style="width:100%">export .html</button>
+      <div class="export-row">
+        <button class="btn" id="btn-export-m" style="width:100%">export .html</button>
+        <button class="btn" id="btn-export-png-m" style="width:100%">export .png</button>
+      </div>
     </div>
   </div>
 </div>

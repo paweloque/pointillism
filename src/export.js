@@ -168,3 +168,14 @@ export function downloadExport(img) {
   a.click();
   URL.revokeObjectURL(url);
 }
+
+export function downloadPNG(canvas) {
+  canvas.toBlob((blob) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'pointilism-export.png';
+    a.click();
+    URL.revokeObjectURL(url);
+  }, 'image/png');
+}

@@ -3,7 +3,7 @@ import { drawDots } from './renderer.js';
 import { createDemoImage } from './demo-image.js';
 import { buildGrid, queryRadius } from './spatial-grid.js';
 import { state, set, onChange, resetState, resetGroup } from './state.js';
-import { downloadExport } from './export.js';
+import { downloadExport, downloadPNG } from './export.js';
 
 const canvas = document.getElementById('scene');
 const ctx = canvas.getContext('2d');
@@ -614,6 +614,10 @@ document.getElementById('btn-export').addEventListener('click', () => {
   if (currentImage) downloadExport(currentImage);
 });
 
+document.getElementById('btn-export-png').addEventListener('click', () => {
+  if (currentImage) downloadPNG(canvas);
+});
+
 // --- Responsive: sidebar toggle + bottom sheet ---
 
 const sidebarToggle = document.getElementById('sidebar-toggle');
@@ -646,6 +650,10 @@ wireSlider('ctrl-size-m', 'val-size-m', 'dotSize', (v) => v / 10, (v) => (v / 10
 document.getElementById('btn-upload-m').addEventListener('click', () => fileInput.click());
 document.getElementById('btn-export-m').addEventListener('click', () => {
   document.getElementById('btn-export').click();
+});
+
+document.getElementById('btn-export-png-m').addEventListener('click', () => {
+  document.getElementById('btn-export-png').click();
 });
 
 // --- Resize ---
