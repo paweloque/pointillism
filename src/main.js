@@ -1,9 +1,12 @@
+import { inject } from '@vercel/analytics';
 import { sampleImage, hexLuminance } from './sampler.js';
 import { drawDots } from './renderer.js';
 import { createDemoImage } from './demo-image.js';
 import { buildGrid, queryRadius } from './spatial-grid.js';
 import { state, set, onChange, resetState, resetGroup } from './state.js';
 import { downloadExport, downloadPNG } from './export.js';
+
+inject();
 
 const canvas = document.getElementById('scene');
 const ctx = canvas.getContext('2d');
