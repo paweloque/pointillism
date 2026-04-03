@@ -10,7 +10,7 @@ export const DEFAULT_ALPHA_SCALING = 0.6;
  * Draw an image onto an offscreen canvas using cover-fit.
  * Returns the ImageData for the covered area.
  */
-export function coverFit(img, width, height, focalX = 0.5, focalY = 0.5, textOptions = null) {
+export function coverFit(img, width, height, focalX = 0.5, focalY = 0.5) {
   const off = document.createElement('canvas');
   off.width = width;
   off.height = height;
@@ -25,17 +25,6 @@ export function coverFit(img, width, height, focalX = 0.5, focalY = 0.5, textOpt
   const sy = (ih - sh) * focalY;
 
   ctx.drawImage(img, sx, sy, sw, sh, 0, 0, width, height);
-
-  // Rasterize text onto the image before sampling
-  if (textOptions && textOptions.text) {
-    ctx.fillStyle = '#fff';
-    ctx.font = `${textOptions.size || 64}px ${textOptions.font || 'Inter'}, sans-serif`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    const tx = (textOptions.x || 0.5) * width;
-    const ty = (textOptions.y || 0.5) * height;
-    ctx.fillText(textOptions.text, tx, ty);
-  }
 
   return ctx.getImageData(0, 0, width, height);
 }
@@ -161,7 +150,7 @@ export function samplePixels(data, width, height, options = {}) {
  * Combines cover-fit (DOM) + pixel sampling (pure).
  */
 export function sampleImage(img, width, height, options = {}) {
-  const { focalX = 0.5, focalY = 0.5, text = null, ...samplingOptions } = options;
-  const imageData = coverFit(img, width, height, focalX, focalY, text);
+  const { focalX = 0.5, focalY = 0.5, ...samplingOptions } = options;
+  const imageData = coverFit(img, width, height, focalX, focalY);
   return samplePixels(imageData.data, width, height, samplingOptions);
 }

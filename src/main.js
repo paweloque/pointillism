@@ -166,13 +166,6 @@ function resample() {
     lightBackground: hexLuminance(state.bgColor) >= 0.5,
     focalX: state.focalX,
     focalY: state.focalY,
-    text: state.textContent ? {
-      text: state.textContent,
-      font: state.textFont,
-      size: state.textSize,
-      x: state.textX,
-      y: state.textY,
-    } : null,
   });
   dots = result.dots;
   grid = buildGrid(dots, state.mouseRadius);
@@ -613,16 +606,6 @@ canvasArea.addEventListener('drop', (e) => {
   const file = e.dataTransfer.files[0];
   if (file) handleFile(file);
 });
-
-// --- Text controls ---
-
-const textInput = document.getElementById('ctrl-text');
-const textFontSelect = document.getElementById('ctrl-text-font');
-
-textInput.addEventListener('input', () => set('textContent', textInput.value));
-textFontSelect.addEventListener('change', () => set('textFont', textFontSelect.value));
-wireSlider('ctrl-text-size', 'val-text-size', 'textSize', (v) => v, (v) => v + 'px');
-wireSlider('ctrl-text-y', 'val-text-y', 'textY', (v) => v / 100, (v) => Math.round(v * 100) + '%');
 
 // --- Export ---
 

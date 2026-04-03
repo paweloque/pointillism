@@ -43,11 +43,6 @@ export function generateExportHTML(img) {
     hueRotate: s.hueRotate,
     hueRotateSpeed: s.hueRotateSpeed,
     interactionEnabled: s.interactionEnabled,
-    textContent: s.textContent,
-    textFont: s.textFont,
-    textSize: s.textSize,
-    textX: s.textX,
-    textY: s.textY,
   });
 
   return `<!DOCTYPE html>
@@ -85,7 +80,6 @@ const oc=off.getContext("2d");
 const iw=img.naturalWidth,ih=img.naturalHeight;
 const sc=Math.max(W/iw,H/ih),sw=W/sc,sh=H/sc;
 oc.drawImage(img,(iw-sw)*C.focalX,(ih-sh)*C.focalY,sw,sh,0,0,W,H);
-if(C.textContent){oc.fillStyle="#fff";oc.font=C.textSize+"px "+C.textFont+", sans-serif";oc.textAlign="center";oc.textBaseline="middle";oc.fillText(C.textContent,C.textX*W,C.textY*H)}
 return oc.getImageData(0,0,W,H);
 }
 
