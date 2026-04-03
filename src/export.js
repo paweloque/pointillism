@@ -40,6 +40,8 @@ export function generateExportHTML(img) {
     sparkleSpeed: s.sparkleSpeed,
     brownian: s.brownian,
     brownianStrength: s.brownianStrength,
+    hueRotate: s.hueRotate,
+    hueRotateSpeed: s.hueRotateSpeed,
     interactionEnabled: s.interactionEnabled,
     textContent: s.textContent,
     textFont: s.textFont,
@@ -112,6 +114,8 @@ bx:0,by:0
 }
 
 function hexRgb(h){let s=h.replace("#","");if(s.length===3)s=s[0]+s[0]+s[1]+s[1]+s[2]+s[2];const v=parseInt(s,16);return[(v>>16)&255,(v>>8)&255,v&255]}
+function rotHue(r,g,b,a){const c=Math.cos(a),s=Math.sin(a);return[Math.max(0,Math.min(255,Math.round(r*(0.213+0.787*c-0.213*s)+g*(0.715-0.715*c-0.715*s)+b*(0.072-0.072*c+0.928*s)))),Math.max(0,Math.min(255,Math.round(r*(0.213-0.213*c+0.143*s)+g*(0.715+0.285*c+0.140*s)+b*(0.072-0.072*c-0.283*s)))),Math.max(0,Math.min(255,Math.round(r*(0.213-0.213*c-0.787*s)+g*(0.715-0.715*c+0.715*s)+b*(0.072+0.928*c+0.072*s))))]}
+let hueAng=0;
 
 function draw(){
 ctx.fillStyle=C.bgColor;ctx.fillRect(0,0,W,H);
@@ -123,15 +127,20 @@ let a=d.drawAlpha!==undefined?d.drawAlpha:d.alpha;
 ctx.globalAlpha=a;
 let cr=d.r,cg=d.g,cb=d.b;
 if(tR){const inv=1-bl;cr=Math.round(cr*inv+tR[0]*bl);cg=Math.round(cg*inv+tR[1]*bl);cb=Math.round(cb*inv+tR[2]*bl)}
-ctx.fillStyle="rgb("+cr+","+cg+","+cb+")";
+if(hueAng!==0){const h=rotHue(cr,cg,cb,hueAng);cr=h[0];cg=h[1];cb=h[2]}
+if(C.dotShape==="soft"){const sr=d.size*2;const gr=ctx.createRadialGradient(d.x,d.y,0,d.x,d.y,sr);gr.addColorStop(0,"rgba("+cr+","+cg+","+cb+","+a+")");gr.addColorStop(1,"rgba("+cr+","+cg+","+cb+",0)");ctx.globalAlpha=1;ctx.fillStyle=gr;ctx.beginPath();ctx.arc(d.x,d.y,sr,0,6.2832);ctx.fill()}
+else{ctx.fillStyle="rgb("+cr+","+cg+","+cb+")";
 if(C.dotShape==="square"){const s=d.size*2;ctx.fillRect(d.x-d.size,d.y-d.size,s,s)}
-else{ctx.beginPath();ctx.arc(d.x,d.y,d.size,0,6.2832);ctx.fill()}
+else if(C.dotShape==="diamond"){ctx.beginPath();ctx.moveTo(d.x,d.y-d.size);ctx.lineTo(d.x+d.size,d.y);ctx.lineTo(d.x,d.y+d.size);ctx.lineTo(d.x-d.size,d.y);ctx.closePath();ctx.fill()}
+else if(C.dotShape==="cross"){const arm=d.size*0.35;ctx.fillRect(d.x-d.size,d.y-arm,d.size*2,arm*2);ctx.fillRect(d.x-arm,d.y-d.size,arm*2,d.size*2)}
+else{ctx.beginPath();ctx.arc(d.x,d.y,d.size,0,6.2832);ctx.fill()}}
 }
 ctx.globalAlpha=1;
 }
 
 function animate(t){
 requestAnimationFrame(animate);
+hueAng=C.hueRotate?(t*0.001*C.hueRotateSpeed)%6.2832:0;
 const ea=C.mouseEasing;
 for(let i=0;i<dots.length;i++){
 const d=dots[i];let px=d.ox,py=d.oy,am=1;

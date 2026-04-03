@@ -35,13 +35,15 @@ const DEFAULTS = {
   sparkleSpeed: 1.0,
   brownian: false,
   brownianStrength: 0.5,
+  hueRotate: false,
+  hueRotateSpeed: 1.0,
 };
 
 const RESAMPLE_KEYS = new Set(['stride', 'threshold', 'bgColor', 'focalX', 'focalY', 'textContent', 'textFont', 'textSize', 'textX', 'textY']);
 
 const GROUPS = {
   dots: ['stride', 'dotSize', 'sizeScaling', 'threshold', 'dotShape', 'focalX', 'focalY'],
-  color: ['bgColor', 'tintColor', 'tintBlend'],
+  color: ['bgColor', 'tintColor', 'tintBlend', 'hueRotate', 'hueRotateSpeed'],
   interaction: ['interactionEnabled', 'mouseRadius', 'mouseStrength', 'mouseEasing'],
   motion: ['breathing', 'breatheIntensity', 'sway', 'swayIntensity', 'rise', 'riseSpeedMultiplier', 'escape', 'sparkle', 'sparkleSpeed', 'brownian', 'brownianStrength'],
 };
