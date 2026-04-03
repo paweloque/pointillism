@@ -103,7 +103,6 @@
 
   .section.collapsed .section-body { display: none; }
   .section.collapsed .section-title { margin-bottom: 0; }
-  #section-sound .section-title { cursor: pointer; }
 
   .reset-link {
     font-size: 0.6rem;
@@ -741,21 +740,6 @@
     </div>
   </div>
 
-  <div class="section collapsed" id="section-sound">
-    <div class="section-title"><span>Sound</span><button class="reset-link" data-reset="sound">reset</button></div>
-    <div class="section-body">
-      <div class="toggle-row">
-        <label style="font-size:0.8rem">Enabled</label>
-        <div class="toggle" data-toggle="sonification"></div>
-      </div>
-      <div class="control">
-        <div class="control-header">
-          <label>Volume</label><span class="value" id="val-volume">50%</span>
-        </div>
-        <input type="range" id="ctrl-volume" min="0" max="100" value="50">
-      </div>
-    </div>
-  </div>
 
   <div class="section">
     <div class="section-title"><span>Text</span></div>
@@ -841,10 +825,6 @@
         <div class="color-swatch" data-color="#eee" style="background:#eee"></div>
         <div class="color-swatch" data-color="#fff" style="background:#fff"></div>
       </div>
-    </div>
-    <div class="toggle-row">
-      <label style="font-size:0.8rem">Sound</label>
-      <div class="toggle" data-toggle="sonification"></div>
     </div>
     <div class="control" style="margin-top:14px">
       <button class="btn btn-primary" id="btn-upload-m" style="width:100%">upload image</button>

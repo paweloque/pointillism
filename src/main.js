@@ -5,7 +5,6 @@ import { createDemoImage } from './demo-image.js';
 import { buildGrid, queryRadius } from './spatial-grid.js';
 import { state, set, onChange, resetState, resetGroup } from './state.js';
 import { downloadExport, downloadPNG } from './export.js';
-import { createAudioEngine } from './audio.js';
 
 inject();
 
@@ -48,7 +47,6 @@ let grid = null;
 let W = 0;
 let H = 0;
 let animating = false;
-const audioEngine = createAudioEngine(12);
 
 // --- Mouse ---
 
@@ -308,12 +306,6 @@ function updateDots(t) {
     }
   }
 
-  if (state.sonification && grid) {
-    if (!nearby && mouse.x > -1000) {
-      nearby = queryRadius(grid, mouse.x, mouse.y, state.mouseRadius);
-    }
-    audioEngine.update(nearby || [], mouse.x, mouse.y, state.mouseRadius);
-  }
 }
 
 // --- Performance ---
@@ -375,17 +367,6 @@ onChange((key, tier) => {
   if (key === 'mouseRadius' && dots.length > 0) {
     grid = buildGrid(dots, state.mouseRadius);
   }
-  if (key === 'sonification') {
-    if (state.sonification) {
-      audioEngine.start();
-      audioEngine.setMasterVolume(state.sonificationVolume);
-    } else {
-      audioEngine.stop();
-    }
-  }
-  if (key === 'sonificationVolume') {
-    audioEngine.setMasterVolume(state.sonificationVolume);
-  }
 });
 
 // --- Sidebar controls ---
@@ -404,7 +385,6 @@ function syncControlsFromState() {
   setSlider('ctrl-rise-speed', 'val-rise-speed', state.riseSpeedMultiplier * 100, Math.round(state.riseSpeedMultiplier * 100) + '%');
   setSlider('ctrl-sparkle-speed', 'val-sparkle-speed', state.sparkleSpeed * 100, Math.round(state.sparkleSpeed * 100) + '%');
   setSlider('ctrl-brownian-str', 'val-brownian-str', state.brownianStrength * 100, Math.round(state.brownianStrength * 100) + '%');
-  setSlider('ctrl-volume', 'val-volume', state.sonificationVolume, Math.round(state.sonificationVolume) + '%');
 
   // Focal point
   updateFocalPointPosition();
@@ -464,7 +444,6 @@ wireSlider('ctrl-sway-int', 'val-sway-int', 'swayIntensity', (v) => v / 100, (v)
 wireSlider('ctrl-rise-speed', 'val-rise-speed', 'riseSpeedMultiplier', (v) => v / 100, (v) => Math.round(v * 100) + '%');
 wireSlider('ctrl-sparkle-speed', 'val-sparkle-speed', 'sparkleSpeed', (v) => v / 100, (v) => Math.round(v * 100) + '%');
 wireSlider('ctrl-brownian-str', 'val-brownian-str', 'brownianStrength', (v) => v / 100, (v) => Math.round(v * 100) + '%');
-wireSlider('ctrl-volume', 'val-volume', 'sonificationVolume', v => v, v => Math.round(v) + '%');
 
 // Physics presets
 const PHYSICS_PRESETS = {
@@ -552,11 +531,6 @@ onChange(() => {
 });
 
 // --- Collapsible sections ---
-
-document.getElementById('section-sound').querySelector('.section-title').addEventListener('click', (e) => {
-  if (e.target.classList.contains('reset-link')) return;
-  document.getElementById('section-sound').classList.toggle('collapsed');
-});
 
 // --- Reset ---
 
