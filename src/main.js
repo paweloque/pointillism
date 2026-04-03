@@ -524,10 +524,10 @@ function updateInteractionDim() {
 
 // Preset buttons
 const PRESETS = {
-  subtle: { stride: 4, dotSize: 0.3, sizeScaling: 0.5, threshold: 0.01, bgColor: '#000', mouseRadius: 80, mouseStrength: 12, mouseEasing: 0.06, breathing: true, sway: false, rise: false },
-  dense:  { stride: 2, dotSize: 0.5, sizeScaling: 0.8, threshold: 0.01, bgColor: '#000', mouseRadius: 60, mouseStrength: 18, mouseEasing: 0.08, breathing: false, sway: false, rise: false },
-  dreamy: { stride: 3, dotSize: 0.4, sizeScaling: 0.65, threshold: 0.01, bgColor: '#0a0a2e', mouseRadius: 100, mouseStrength: 10, mouseEasing: 0.04, breathing: true, sway: true, rise: false },
-  energy: { stride: 2, dotSize: 0.6, sizeScaling: 1.0, threshold: 0.005, bgColor: '#000', mouseRadius: 120, mouseStrength: 30, mouseEasing: 0.12, breathing: true, sway: true, rise: true },
+  subtle: { stride: 4, dotSize: 0.3, sizeScaling: 0.5, threshold: 0.03, bgColor: '#000', mouseRadius: 80, mouseStrength: 12, mouseEasing: 0.06, breathing: true, sway: false, rise: false },
+  dense:  { stride: 2, dotSize: 0.5, sizeScaling: 0.8, threshold: 0.02, bgColor: '#000', mouseRadius: 60, mouseStrength: 18, mouseEasing: 0.08, breathing: false, sway: false, rise: false },
+  dreamy: { stride: 3, dotSize: 0.4, sizeScaling: 0.65, threshold: 0.05, bgColor: '#0a0a2e', mouseRadius: 100, mouseStrength: 10, mouseEasing: 0.04, breathing: true, sway: true, rise: false },
+  energy: { stride: 2, dotSize: 0.6, sizeScaling: 1.0, threshold: 0.01, bgColor: '#000', mouseRadius: 120, mouseStrength: 30, mouseEasing: 0.12, breathing: true, sway: true, rise: true },
 };
 
 let applyingPreset = false;

@@ -4,7 +4,7 @@ const DEFAULTS = {
   stride: 3,
   dotSize: 0.4,
   sizeScaling: 0.65,
-  threshold: 0.01,
+  threshold: 0.05,
   dotShape: 'circle',
   // Color
   tintColor: null,
